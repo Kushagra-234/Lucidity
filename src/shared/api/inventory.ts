@@ -1,4 +1,5 @@
 import type { InventoryItem } from "../types/inventory";
+import { MOCK_INVENTORY } from "./mockInventory";
 
 const INVENTORY_URL = "https://dev-0tf0hinghgjl39z.api.raw-labs.com/inventory";
 
@@ -29,22 +30,32 @@ function normalizeItem(raw: unknown): InventoryItem | null {
 }
 
 export async function fetchInventory(): Promise<InventoryItem[]> {
-  const res = await fetch(INVENTORY_URL);
-  if (!res.ok) {
-    throw new Error(
-      `Inventory request failed: ${res.status} ${res.statusText}`,
-    );
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const res = await fetch(INVENTORY_URL, { signal: controller.signal });
+    if (!res.ok) {
+      throw new Error(
+        `Inventory request failed: ${res.status} ${res.statusText}`,
+      );
+    }
+
+    const data: unknown = await res.json();
+
+    const rawItems: unknown[] = Array.isArray(data)
+      ? data
+      : isRecord(data) && Array.isArray(data.inventory)
+        ? (data.inventory as unknown[])
+        : [];
+
+    const normalized = rawItems
+      .map(normalizeItem)
+      .filter((x): x is InventoryItem => x !== null);
+    return normalized.length ? normalized : MOCK_INVENTORY;
+  } catch {
+    return MOCK_INVENTORY;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  const data: unknown = await res.json();
-
-  const rawItems: unknown[] = Array.isArray(data)
-    ? data
-    : isRecord(data) && Array.isArray(data.inventory)
-      ? (data.inventory as unknown[])
-      : [];
-
-  return rawItems
-    .map(normalizeItem)
-    .filter((x): x is InventoryItem => x !== null);
 }
