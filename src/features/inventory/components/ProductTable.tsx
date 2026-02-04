@@ -1,17 +1,26 @@
-import type { InventoryItem } from "../../../shared/types/inventory";
 import type { ViewMode } from "../../../shared/types/viewMode";
 import type React from "react";
+import type { InventoryProduct } from "../types";
 
 type Props = {
-  items: InventoryItem[];
+  items: InventoryProduct[];
   mode: ViewMode;
+  onEdit: (id: string) => void;
+  onDisable: (id: string) => void;
+  onDelete: (id: string) => void;
 };
 
 function formatMoney(value: number) {
   return `$${new Intl.NumberFormat("en-IN").format(value)}`;
 }
 
-export function ProductTable({ items, mode }: Props) {
+export function ProductTable({
+  items,
+  mode,
+  onEdit,
+  onDisable,
+  onDelete,
+}: Props) {
   const isUser = mode === "user";
 
   return (
@@ -30,10 +39,15 @@ export function ProductTable({ items, mode }: Props) {
         <tbody>
           {items.map((item) => {
             const value = item.price * item.quantity;
+            const isDisabled = item.disabled;
+            const disableActions = isUser || isDisabled;
             return (
               <tr
-                key={`${item.name}-${item.category}`}
-                className="border-t border-neutral-800/70"
+                key={item.id}
+                className={
+                  "border-t border-neutral-800/70 " +
+                  (isDisabled ? "opacity-50" : "")
+                }
               >
                 <Td>{item.name}</Td>
                 <Td>
@@ -48,13 +62,25 @@ export function ProductTable({ items, mode }: Props) {
                 </Td>
                 <Td>
                   <div className="flex items-center justify-center gap-3">
-                    <ActionIconButton label="Edit" disabled={isUser}>
+                    <ActionIconButton
+                      label="Edit"
+                      disabled={disableActions}
+                      onClick={() => onEdit(item.id)}
+                    >
                       <PencilIcon />
                     </ActionIconButton>
-                    <ActionIconButton label="Disable" disabled={isUser}>
+                    <ActionIconButton
+                      label="Disable"
+                      disabled={isUser || isDisabled}
+                      onClick={() => onDisable(item.id)}
+                    >
                       <EyeIcon />
                     </ActionIconButton>
-                    <ActionIconButton label="Delete" disabled={isUser}>
+                    <ActionIconButton
+                      label="Delete"
+                      disabled={isUser}
+                      onClick={() => onDelete(item.id)}
+                    >
                       <TrashIcon />
                     </ActionIconButton>
                   </div>
@@ -83,12 +109,14 @@ function Td({ className = "", ...props }: TdProps) {
 type ActionIconButtonProps = {
   label: string;
   disabled: boolean;
+  onClick?: () => void;
   children: React.ReactNode;
 };
 
 function ActionIconButton({
   label,
   disabled,
+  onClick,
   children,
 }: ActionIconButtonProps) {
   return (
@@ -96,6 +124,7 @@ function ActionIconButton({
       type="button"
       aria-label={label}
       disabled={disabled}
+      onClick={onClick}
       className={
         "grid h-8 w-8 place-items-center rounded-md transition-colors " +
         (disabled

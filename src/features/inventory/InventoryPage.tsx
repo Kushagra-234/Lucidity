@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { fetchInventory } from "../../shared/api/inventory";
-import type { InventoryItem } from "../../shared/types/inventory";
 import type { ViewMode } from "../../shared/types/viewMode";
+import type { InventoryItem } from "../../shared/types/inventory";
 import { ProductTable } from "./components/ProductTable";
 import { StatsGrid } from "./components/StatsGrid";
+import type { InventoryProduct } from "./types";
+import { createId } from "./utils";
+import { EditProductModal } from "./components/EditProductModal";
 
 type LoadState =
   | { status: "idle" | "loading" }
-  | { status: "success"; data: InventoryItem[] }
+  | { status: "success" }
   | { status: "error"; message: string };
 
 type Props = {
@@ -16,6 +19,8 @@ type Props = {
 
 export function InventoryPage({ mode }: Props) {
   const [state, setState] = useState<LoadState>({ status: "idle" });
+  const [products, setProducts] = useState<InventoryProduct[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -25,7 +30,13 @@ export function InventoryPage({ mode }: Props) {
       try {
         const data = await fetchInventory();
         if (cancelled) return;
-        setState({ status: "success", data });
+        const nextProducts = data.map((item: InventoryItem) => ({
+          ...item,
+          id: createId(),
+          disabled: false,
+        }));
+        setProducts(nextProducts);
+        setState({ status: "success" });
       } catch (e) {
         if (cancelled) return;
         const message =
@@ -42,7 +53,10 @@ export function InventoryPage({ mode }: Props) {
 
   const isLoading = state.status === "idle" || state.status === "loading";
   const isError = state.status === "error";
-  const data = state.status === "success" ? state.data : [];
+  const activeProducts = products.filter((p) => !p.disabled);
+  const editingProduct = editingId
+    ? (products.find((p) => p.id === editingId) ?? null)
+    : null;
 
   return (
     <section className="space-y-6">
@@ -62,8 +76,31 @@ export function InventoryPage({ mode }: Props) {
         </div>
       ) : (
         <>
-          <StatsGrid items={data} />
-          <ProductTable items={data} mode={mode} />
+          <StatsGrid items={activeProducts} />
+          <ProductTable
+            items={products}
+            mode={mode}
+            onEdit={(id) => setEditingId(id)}
+            onDisable={(id) => {
+              setProducts((prev) =>
+                prev.map((p) => (p.id === id ? { ...p, disabled: true } : p)),
+              );
+            }}
+            onDelete={(id) => {
+              setProducts((prev) => prev.filter((p) => p.id !== id));
+            }}
+          />
+          <EditProductModal
+            open={mode === "admin" && editingId !== null}
+            product={editingProduct}
+            onClose={() => setEditingId(null)}
+            onSave={(next) => {
+              setProducts((prev) =>
+                prev.map((p) => (p.id === next.id ? next : p)),
+              );
+              setEditingId(null);
+            }}
+          />
         </>
       )}
     </section>

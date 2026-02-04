@@ -1,8 +1,8 @@
-import type { InventoryItem } from "../../../shared/types/inventory";
 import type React from "react";
+import type { InventoryProduct } from "../types";
 
 type Props = {
-  items: InventoryItem[];
+  items: InventoryProduct[];
 };
 
 function formatNumber(value: number) {
