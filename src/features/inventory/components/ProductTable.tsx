@@ -61,7 +61,7 @@ export function ProductTable({
                   {formatMoney(value)}
                 </Td>
                 <Td>
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex flex-nowrap items-center justify-center gap-4 whitespace-nowrap">
                     <ActionIconButton
                       label="Edit"
                       disabled={disableActions}
@@ -126,7 +126,7 @@ function ActionIconButton({
       disabled={disabled}
       onClick={onClick}
       className={
-        "grid h-8 w-8 place-items-center rounded-md transition-colors " +
+        "inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors " +
         (disabled
           ? "cursor-not-allowed bg-neutral-800/30 text-neutral-500"
           : "bg-neutral-800/50 text-neutral-200 hover:bg-neutral-800 hover:text-neutral-100")
@@ -175,13 +175,10 @@ function EyeIcon() {
         d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
         stroke="currentColor"
         strokeWidth="2"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <path
-        d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
     </svg>
   );
 }

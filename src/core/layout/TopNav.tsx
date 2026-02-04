@@ -10,25 +10,35 @@ export function TopNav({ mode, onModeChange }: Props) {
 
   return (
     <header className="flex items-center justify-end gap-4 px-6 py-4">
-      <div className="flex items-center gap-2 text-sm text-neutral-300">
-        <span className={isAdmin ? "text-neutral-100" : ""}>admin</span>
+      <div className="flex items-center gap-4 text-sm text-neutral-300">
+        <span
+          className={`w-12 shrink-0 text-right ${isAdmin ? "text-neutral-100" : ""}`}
+        >
+          admin
+        </span>
         <button
           type="button"
+          role="switch"
+          aria-checked={isAdmin}
           onClick={() => onModeChange(isAdmin ? "user" : "admin")}
           className={
-            "relative h-5 w-9 rounded-full transition-colors " +
-            (isAdmin ? "bg-lime-500/80" : "bg-neutral-600")
+            "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors focus:outline-none focus:ring-2 focus:ring-sky-300/60 " +
+            (isAdmin
+              ? "border-lime-400/60 bg-lime-500/70"
+              : "border-neutral-700 bg-neutral-700/70")
           }
           aria-label="Toggle view mode"
         >
           <span
             className={
-              "absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform " +
-              (isAdmin ? "translate-x-4" : "translate-x-0.5")
+              "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform " +
+              (isAdmin ? "translate-x-5" : "translate-x-1")
             }
           />
         </button>
-        <span className={!isAdmin ? "text-neutral-100" : ""}>user</span>
+        <span className={`w-12 shrink-0 ${!isAdmin ? "text-neutral-100" : ""}`}>
+          user
+        </span>
       </div>
 
       <button
