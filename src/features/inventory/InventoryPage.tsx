@@ -1,58 +1,29 @@
 import { useEffect, useState } from "react";
-import { fetchInventory } from "../../shared/api/inventory";
-import type { ViewMode } from "../../shared/types/viewMode";
-import type { InventoryItem } from "../../shared/types/inventory";
+import { useAppDispatch, useAppSelector } from "../../core/hooks";
 import { ProductTable } from "./components/ProductTable";
 import { StatsGrid } from "./components/StatsGrid";
-import type { InventoryProduct } from "./types";
-import { createId } from "./utils";
 import { EditProductModal } from "./components/EditProductModal";
+import {
+  deleteProduct,
+  disableProduct,
+  loadInventory,
+  updateProduct,
+} from "./inventorySlice";
 
-type LoadState =
-  | { status: "idle" | "loading" }
-  | { status: "success" }
-  | { status: "error"; message: string };
-
-type Props = {
-  mode: ViewMode;
-};
-
-export function InventoryPage({ mode }: Props) {
-  const [state, setState] = useState<LoadState>({ status: "idle" });
-  const [products, setProducts] = useState<InventoryProduct[]>([]);
+export function InventoryPage() {
+  const dispatch = useAppDispatch();
+  const mode = useAppSelector((s) => s.ui.mode);
+  const { status, error, products } = useAppSelector((s) => s.inventory);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function run() {
-      setState({ status: "loading" });
-      try {
-        const data = await fetchInventory();
-        if (cancelled) return;
-        const nextProducts = data.map((item: InventoryItem) => ({
-          ...item,
-          id: createId(),
-          disabled: false,
-        }));
-        setProducts(nextProducts);
-        setState({ status: "success" });
-      } catch (e) {
-        if (cancelled) return;
-        const message =
-          e instanceof Error ? e.message : "Failed to load inventory";
-        setState({ status: "error", message });
-      }
+    if (status === "idle") {
+      void dispatch(loadInventory());
     }
+  }, [dispatch, status]);
 
-    run();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const isLoading = state.status === "idle" || state.status === "loading";
-  const isError = state.status === "error";
+  const isLoading = status === "idle" || status === "loading";
+  const isError = status === "error";
   const activeProducts = products.filter((p) => !p.disabled);
   const editingProduct = editingId
     ? (products.find((p) => p.id === editingId) ?? null)
@@ -72,7 +43,9 @@ export function InventoryPage({ mode }: Props) {
         </div>
       ) : isError ? (
         <div className="rounded-2xl border border-neutral-800/80 bg-neutral-900/40 p-6">
-          <div className="text-sm text-red-300">{state.message}</div>
+          <div className="text-sm text-red-300">
+            {error ?? "Failed to load inventory"}
+          </div>
         </div>
       ) : (
         <>
@@ -82,12 +55,10 @@ export function InventoryPage({ mode }: Props) {
             mode={mode}
             onEdit={(id) => setEditingId(id)}
             onDisable={(id) => {
-              setProducts((prev) =>
-                prev.map((p) => (p.id === id ? { ...p, disabled: true } : p)),
-              );
+              dispatch(disableProduct(id));
             }}
             onDelete={(id) => {
-              setProducts((prev) => prev.filter((p) => p.id !== id));
+              dispatch(deleteProduct(id));
             }}
           />
           <EditProductModal
@@ -95,9 +66,7 @@ export function InventoryPage({ mode }: Props) {
             product={editingProduct}
             onClose={() => setEditingId(null)}
             onSave={(next) => {
-              setProducts((prev) =>
-                prev.map((p) => (p.id === next.id ? next : p)),
-              );
+              dispatch(updateProduct(next));
               setEditingId(null);
             }}
           />

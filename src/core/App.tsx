@@ -1,14 +1,15 @@
-import { useState } from "react";
 import { AppLayout } from "./layout/AppLayout";
 import { InventoryPage } from "../features/inventory/InventoryPage";
-import type { ViewMode } from "../shared/types/viewMode";
+import { useAppDispatch, useAppSelector } from "./hooks";
+import { setMode } from "../features/ui/uiSlice";
 
 export default function App() {
-  const [mode, setMode] = useState<ViewMode>("admin");
+  const dispatch = useAppDispatch();
+  const mode = useAppSelector((s) => s.ui.mode);
 
   return (
-    <AppLayout mode={mode} onModeChange={setMode}>
-      <InventoryPage mode={mode} />
+    <AppLayout mode={mode} onModeChange={(next) => dispatch(setMode(next))}>
+      <InventoryPage />
     </AppLayout>
   );
 }
