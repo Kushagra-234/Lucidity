@@ -8,7 +8,7 @@ export default function App() {
 
   return (
     <AppLayout mode={mode} onModeChange={setMode}>
-      <InventoryPage />
+      <InventoryPage mode={mode} />
     </AppLayout>
   );
 }

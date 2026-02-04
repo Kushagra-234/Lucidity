@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { fetchInventory } from "../../shared/api/inventory";
 import type { InventoryItem } from "../../shared/types/inventory";
+import type { ViewMode } from "../../shared/types/viewMode";
+import { ProductTable } from "./components/ProductTable";
+import { StatsGrid } from "./components/StatsGrid";
 
 type LoadState =
   | { status: "idle" | "loading" }
   | { status: "success"; data: InventoryItem[] }
   | { status: "error"; message: string };
 
-export function InventoryPage() {
+type Props = {
+  mode: ViewMode;
+};
+
+export function InventoryPage({ mode }: Props) {
   const [state, setState] = useState<LoadState>({ status: "idle" });
 
   useEffect(() => {
@@ -45,32 +52,20 @@ export function InventoryPage() {
         </h1>
       </div>
 
-      <div className="rounded-2xl border border-neutral-800/80 bg-neutral-900/40 p-6">
-        {isLoading ? (
+      {isLoading ? (
+        <div className="rounded-2xl border border-neutral-800/80 bg-neutral-900/40 p-6">
           <div className="text-sm text-neutral-400">Loading inventory…</div>
-        ) : isError ? (
+        </div>
+      ) : isError ? (
+        <div className="rounded-2xl border border-neutral-800/80 bg-neutral-900/40 p-6">
           <div className="text-sm text-red-300">{state.message}</div>
-        ) : (
-          <div className="space-y-4">
-            <div className="text-sm text-neutral-300">
-              Fetched products: {data.length}
-            </div>
-            <ul className="space-y-2 text-sm text-neutral-400">
-              {data.slice(0, 5).map((item) => (
-                <li
-                  key={`${item.name}-${item.category}`}
-                  className="flex justify-between"
-                >
-                  <span className="truncate">{item.name}</span>
-                  <span className="ml-4 shrink-0 text-neutral-500">
-                    {item.category} · ${item.price} · qty {item.quantity}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <>
+          <StatsGrid items={data} />
+          <ProductTable items={data} mode={mode} />
+        </>
+      )}
     </section>
   );
 }
