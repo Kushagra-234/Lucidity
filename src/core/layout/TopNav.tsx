@@ -12,9 +12,9 @@ export function TopNav({ mode, onModeChange }: Props) {
     <header className="flex items-center justify-end gap-4 px-6 py-4">
       <div className="flex items-center gap-4 text-sm text-neutral-300">
         <span
-          className={`w-12 shrink-0 text-right ${isAdmin ? "text-neutral-100" : ""}`}
+          className={`w-12 shrink-0 text-right ${!isAdmin ? "text-neutral-100" : ""}`}
         >
-          admin
+          user
         </span>
         <button
           type="button"
@@ -36,8 +36,8 @@ export function TopNav({ mode, onModeChange }: Props) {
             }
           />
         </button>
-        <span className={`w-12 shrink-0 ${!isAdmin ? "text-neutral-100" : ""}`}>
-          user
+        <span className={`w-12 shrink-0 ${isAdmin ? "text-neutral-100" : ""}`}>
+          admin
         </span>
       </div>
 

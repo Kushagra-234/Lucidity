@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import type { ViewMode } from "../../shared/types/viewMode";
 
 export type UiState = {
@@ -13,7 +14,7 @@ const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
-    setMode(state, action: { payload: ViewMode }) {
+    setMode(state, action: PayloadAction<ViewMode>) {
       state.mode = action.payload;
     },
   },

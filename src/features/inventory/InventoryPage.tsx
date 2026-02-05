@@ -53,11 +53,16 @@ export function InventoryPage() {
           <ProductTable
             items={products}
             mode={mode}
-            onEdit={(id) => setEditingId(id)}
+            onEdit={(id) => {
+              if (mode !== "admin") return;
+              setEditingId(id);
+            }}
             onDisable={(id) => {
+              if (mode !== "admin") return;
               dispatch(disableProduct(id));
             }}
             onDelete={(id) => {
+              if (mode !== "admin") return;
               dispatch(deleteProduct(id));
             }}
           />
@@ -66,6 +71,7 @@ export function InventoryPage() {
             product={editingProduct}
             onClose={() => setEditingId(null)}
             onSave={(next) => {
+              if (mode !== "admin") return;
               dispatch(updateProduct(next));
               setEditingId(null);
             }}

@@ -46,7 +46,9 @@ export function ProductTable({
                 key={item.id}
                 className={
                   "border-t border-neutral-800/70 " +
-                  (isDisabled ? "opacity-50" : "")
+                  (isDisabled
+                    ? "pointer-events-none cursor-not-allowed opacity-40"
+                    : "")
                 }
               >
                 <Td>{item.name}</Td>
@@ -71,14 +73,14 @@ export function ProductTable({
                     </ActionIconButton>
                     <ActionIconButton
                       label="Disable"
-                      disabled={isUser || isDisabled}
+                      disabled={disableActions}
                       onClick={() => onDisable(item.id)}
                     >
                       <EyeIcon />
                     </ActionIconButton>
                     <ActionIconButton
                       label="Delete"
-                      disabled={isUser}
+                      disabled={disableActions}
                       onClick={() => onDelete(item.id)}
                     >
                       <TrashIcon />
