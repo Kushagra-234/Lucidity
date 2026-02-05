@@ -10,11 +10,14 @@ type Props = {
 
 export function AppLayout({ mode, onModeChange, children }: Props) {
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100">
-      <div className="mx-auto w-full max-w-6xl">
+    <div className="flex min-h-screen flex-col bg-neutral-950 text-neutral-100">
+      <div className="mx-auto w-full max-w-6xl flex-1">
         <TopNav mode={mode} onModeChange={onModeChange} />
         <main className="px-6 pb-10">{children}</main>
       </div>
+      <footer className="border-t border-neutral-800/50 py-4 text-center text-sm text-neutral-500">
+        Made with ❤️ by <span className="text-neutral-300">Kushagra Gupta</span>
+      </footer>
     </div>
   );
 }

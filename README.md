@@ -2,9 +2,9 @@
 
 A simple inventory management web application built with React, TypeScript, and Tailwind CSS. This app allows users to view, edit, delete, and disable products in an inventory system with separate Admin and User views.
 
-![Admin View](./assets/images/adminview.png)
-![User View](./assets/images/userview.png)
-![Edit Product](./assets/images/editview.png)
+![Admin View](./src/assets/images/adminview.png)
+![User View](./src/assets/images/userview.png)
+![Edit Product](./src/assets/images/editview.png)
 
 ---
 
@@ -143,24 +143,22 @@ npm run preview
 
 ### Admin View
 
-![Admin View](./assets/images/adminview.png)
+![Admin View](./src/assets/images/adminview.png)
 
 ### User View
 
-![User View](./assets/images/userview.png)
+![User View](./src/assets/images/userview.png)
 
 ### Edit Product Modal
 
-![Edit Product](./assets/images/editview.png)
-
----
-
-## Author
-
-**Kushagra**
+![Edit Product](./src/assets/images/editview.png)
 
 ---
 
 ## License
 
 This project is for assessment purposes.
+
+---
+
+<p align="center">Made with ❤️ by <strong>Kushagra Gupta</strong></p>
