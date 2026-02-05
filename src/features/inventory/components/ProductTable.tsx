@@ -42,15 +42,7 @@ export function ProductTable({
             const isDisabled = item.disabled;
             const disableActions = isUser || isDisabled;
             return (
-              <tr
-                key={item.id}
-                className={
-                  "border-t border-neutral-800/70 " +
-                  (isDisabled
-                    ? "pointer-events-none cursor-not-allowed opacity-40"
-                    : "")
-                }
-              >
+              <tr key={item.id} className="border-t border-neutral-800/70">
                 <Td>{item.name}</Td>
                 <Td>
                   <span className="rounded-full bg-neutral-800/60 px-3 py-1 text-xs text-neutral-200">
@@ -72,11 +64,11 @@ export function ProductTable({
                       <PencilIcon />
                     </ActionIconButton>
                     <ActionIconButton
-                      label="Disable"
-                      disabled={disableActions}
+                      label={isDisabled ? "Enable" : "Disable"}
+                      disabled={isUser}
                       onClick={() => onDisable(item.id)}
                     >
-                      <EyeIcon />
+                      {isDisabled ? <EyeOffIcon /> : <EyeIcon />}
                     </ActionIconButton>
                     <ActionIconButton
                       label="Delete"
@@ -130,8 +122,8 @@ function ActionIconButton({
       className={
         "inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors " +
         (disabled
-          ? "cursor-not-allowed bg-neutral-800/30 text-neutral-500"
-          : "bg-neutral-800/50 text-neutral-200 hover:bg-neutral-800 hover:text-neutral-100")
+          ? "cursor-default bg-neutral-800/30 text-neutral-500"
+          : "cursor-pointer bg-neutral-800/50 text-neutral-200 hover:bg-neutral-800 hover:text-neutral-100")
       }
     >
       {children}
@@ -181,6 +173,47 @@ function EyeIcon() {
         strokeLinejoin="round"
       />
       <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function EyeOffIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="m1 1 22 22"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14.12 14.12a3 3 0 1 1-4.24-4.24"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }

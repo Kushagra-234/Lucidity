@@ -5,7 +5,7 @@ import { StatsGrid } from "./components/StatsGrid";
 import { EditProductModal } from "./components/EditProductModal";
 import {
   deleteProduct,
-  disableProduct,
+  toggleDisableProduct,
   loadInventory,
   updateProduct,
 } from "./inventorySlice";
@@ -59,7 +59,7 @@ export function InventoryPage() {
             }}
             onDisable={(id) => {
               if (mode !== "admin") return;
-              dispatch(disableProduct(id));
+              dispatch(toggleDisableProduct(id));
             }}
             onDelete={(id) => {
               if (mode !== "admin") return;

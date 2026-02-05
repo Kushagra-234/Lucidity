@@ -34,9 +34,9 @@ const inventorySlice = createSlice({
         p.id === action.payload.id ? action.payload : p,
       );
     },
-    disableProduct(state, action: { payload: string }) {
+    toggleDisableProduct(state, action: { payload: string }) {
       state.products = state.products.map((p) =>
-        p.id === action.payload ? { ...p, disabled: true } : p,
+        p.id === action.payload ? { ...p, disabled: !p.disabled } : p,
       );
     },
     deleteProduct(state, action: { payload: string }) {
@@ -60,6 +60,6 @@ const inventorySlice = createSlice({
   },
 });
 
-export const { updateProduct, disableProduct, deleteProduct } =
+export const { updateProduct, toggleDisableProduct, deleteProduct } =
   inventorySlice.actions;
 export default inventorySlice.reducer;
