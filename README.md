@@ -1,73 +1,166 @@
-# React + TypeScript + Vite
+# Inventory Management App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple inventory management web application built with React, TypeScript, and Tailwind CSS. This app allows users to view, edit, delete, and disable products in an inventory system with separate Admin and User views.
 
-Currently, two official plugins are available:
+![Admin View](./assets/images/adminview.png)
+![User View](./assets/images/userview.png)
+![Edit Product](./assets/images/editview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Admin View
 
-## Expanding the ESLint configuration
+- **Edit Product**: Click the pencil icon to open a popup modal where you can edit category, price, and quantity. Value is auto-calculated.
+- **Delete Product**: Click the trash icon to remove a product from the inventory.
+- **Disable/Enable Product**: Click the eye icon to toggle product visibility. Disabled products show a crossed-eye icon and can be re-enabled by clicking again.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### User View
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **View Only**: Users can see all products but cannot perform any actions.
+- **Disabled Actions**: All action buttons (edit, delete, disable) are disabled in user mode.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Top Widgets (Auto-Updated)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Total Products**: Count of all active (non-disabled) products
+- **Total Store Value**: Sum of (price × quantity) for all active products
+- **Out of Stock**: Count of products with quantity = 0
+- **No. of Categories**: Count of unique categories
+
+### Validation
+
+- **Value Zero Error**: Edit modal shows error and blocks save if calculated value is 0
+
+---
+
+## Tech Stack
+
+| Technology        | Purpose                  |
+| ----------------- | ------------------------ |
+| **React 19**      | UI Framework             |
+| **TypeScript**    | Type Safety              |
+| **Vite**          | Build Tool               |
+| **Tailwind CSS**  | Styling                  |
+| **Redux Toolkit** | State Management (Bonus) |
+
+---
+
+## Project Structure
+
+```
+src/
+├── core/                    # App shell, layout, store
+│   ├── App.tsx
+│   ├── store.ts             # Redux store configuration
+│   ├── hooks.ts             # Typed Redux hooks
+│   └── layout/
+│       ├── AppLayout.tsx
+│       └── TopNav.tsx       # Admin/User toggle
+├── features/
+│   ├── inventory/           # Inventory feature
+│   │   ├── InventoryPage.tsx
+│   │   ├── inventorySlice.ts  # Redux slice
+│   │   ├── types.ts
+│   │   ├── utils.ts
+│   │   └── components/
+│   │       ├── StatsGrid.tsx      # Top 4 widgets
+│   │       ├── ProductTable.tsx   # Product table with actions
+│   │       └── EditProductModal.tsx
+│   └── ui/
+│       └── uiSlice.ts       # UI state (admin/user mode)
+└── shared/
+    ├── api/
+    │   ├── inventory.ts     # API fetch with fallback
+    │   └── mockInventory.ts # Fallback mock data
+    └── types/
+        ├── inventory.ts
+        └── viewMode.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Prerequisites
+
+- Node.js 18+ (recommended: 20+)
+- npm or yarn
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/Kushagra-234/Lucidity.git
+cd Lucidity
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
+
+### Build for Production
+
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## API
+
+**Endpoint**: `https://dev-0tf0hinghgjl39z.api.raw-labs.com/inventory`  
+**Method**: GET
+
+> **Note**: If the API is unavailable (DNS issues), the app automatically falls back to local mock data.
+
+---
+
+## Assignment Requirements Checklist
+
+| Requirement                                | Status |
+| ------------------------------------------ | ------ |
+| API call to fetch inventory                | ✅     |
+| Top 4 widgets with calculated values       | ✅     |
+| Product table with action icons            | ✅     |
+| Admin/User toggle switch                   | ✅     |
+| Admin: Delete product                      | ✅     |
+| Admin: Edit product (popup modal)          | ✅     |
+| Admin: Disable/Enable product (eye toggle) | ✅     |
+| Local state updates (no API for update)    | ✅     |
+| Widgets auto-update on changes             | ✅     |
+| User: All actions disabled                 | ✅     |
+| **Bonus**: Redux Toolkit state management  | ✅     |
+| React + TypeScript                         | ✅     |
+| Tailwind CSS styling                       | ✅     |
+
+---
+
+## Screenshots
+
+### Admin View
+
+![Admin View](./assets/images/adminview.png)
+
+### User View
+
+![User View](./assets/images/userview.png)
+
+### Edit Product Modal
+
+![Edit Product](./assets/images/editview.png)
+
+---
+
+## Author
+
+**Kushagra**
+
+---
+
+## License
+
+This project is for assessment purposes.
