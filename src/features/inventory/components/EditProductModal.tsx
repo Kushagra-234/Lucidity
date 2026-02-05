@@ -31,8 +31,9 @@ export function EditProductModal({ open, product, onClose, onSave }: Props) {
 
   if (!open || !product) return null;
 
-  const valueIsZero = value === 0;
-  const canSave = category.trim().length > 0 && !valueIsZero;
+  const parsedPrice = Number(price);
+  const priceInvalid = !Number.isFinite(parsedPrice) || parsedPrice <= 0;
+  const canSave = category.trim().length > 0 && !priceInvalid;
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 px-4">
@@ -88,9 +89,9 @@ export function EditProductModal({ open, product, onClose, onSave }: Props) {
           </Field>
         </div>
 
-        {valueIsZero && (
+        {priceInvalid && (
           <div className="mt-4 text-sm text-red-400">
-            Value can't be zero. Please adjust price or quantity.
+            Price must be greater than 0.
           </div>
         )}
 
