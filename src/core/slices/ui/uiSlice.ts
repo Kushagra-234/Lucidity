@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { ViewMode } from "../../shared/types/viewMode";
+import type { ViewMode } from "../../../shared/types/viewMode";
 
 export type UiState = {
   mode: ViewMode;

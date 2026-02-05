@@ -1,7 +1,7 @@
 import { AppLayout } from "./layout/AppLayout";
 import { InventoryPage } from "../features/inventory/InventoryPage";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { setMode } from "../features/ui/uiSlice";
+import { setMode } from "./slices/ui/uiSlice";
 
 export default function App() {
   const dispatch = useAppDispatch();

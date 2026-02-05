@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchInventory } from "../../shared/api/inventory";
-import type { InventoryProduct } from "./types";
-import { createId } from "./utils";
+import { fetchInventory } from "../../../shared/api/inventory";
+import type { InventoryProduct } from "../../../features/inventory/types";
+import { createId } from "../../../features/inventory/utils";
 
 export type InventoryState = {
   status: "idle" | "loading" | "success" | "error";

@@ -8,7 +8,7 @@ import {
   toggleDisableProduct,
   loadInventory,
   updateProduct,
-} from "./inventorySlice";
+} from "../../core/slices/inventory/inventorySlice";
 
 export function InventoryPage() {
   const dispatch = useAppDispatch();
