@@ -25,78 +25,94 @@ export function ProductTable({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-neutral-800/80 bg-neutral-900/30">
-      <table className="w-full border-collapse text-left text-sm">
-        <thead className="bg-neutral-900/60">
-          <tr className="text-xs uppercase tracking-wide text-lime-300/80">
-            <Th>Name</Th>
-            <Th>Category</Th>
-            <Th>Price</Th>
-            <Th>Quantity</Th>
-            <Th className="text-right">Value</Th>
-            <Th className="text-center">Action</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => {
-            const value = item.price * item.quantity;
-            const isDisabled = item.disabled;
-            const disableActions = isUser || isDisabled;
-            return (
-              <tr key={item.id} className="border-t border-neutral-800/70">
-                <Td>{item.name}</Td>
-                <Td>
-                  <span className="rounded-full bg-neutral-800/60 px-3 py-1 text-xs text-neutral-200">
-                    {item.category}
-                  </span>
-                </Td>
-                <Td>{formatMoney(item.price)}</Td>
-                <Td>{item.quantity}</Td>
-                <Td className="text-right text-neutral-200">
-                  {formatMoney(value)}
-                </Td>
-                <Td>
-                  <div className="flex flex-nowrap items-center justify-center gap-4 whitespace-nowrap">
-                    <ActionIconButton
-                      label="Edit"
-                      disabled={disableActions}
-                      onClick={() => onEdit(item.id)}
-                    >
-                      <PencilIcon />
-                    </ActionIconButton>
-                    <ActionIconButton
-                      label={isDisabled ? "Enable" : "Disable"}
-                      disabled={isUser}
-                      onClick={() => onDisable(item.id)}
-                    >
-                      {isDisabled ? <EyeOffIcon /> : <EyeIcon />}
-                    </ActionIconButton>
-                    <ActionIconButton
-                      label="Delete"
-                      disabled={disableActions}
-                      onClick={() => onDelete(item.id)}
-                    >
-                      <TrashIcon />
-                    </ActionIconButton>
-                  </div>
-                </Td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="w-full overflow-x-auto">
+        <table className="min-w-[720px] w-full border-collapse text-left text-sm">
+          <thead className="bg-neutral-900/60">
+            <tr className="text-xs uppercase tracking-wide text-lime-300/80">
+              <Th>Name</Th>
+              <Th className="hidden md:table-cell">Category</Th>
+              <Th>Price</Th>
+              <Th>Quantity</Th>
+              <Th className="hidden text-right md:table-cell">Value</Th>
+              <Th className="text-center">Action</Th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((item) => {
+              const value = item.price * item.quantity;
+              const isDisabled = item.disabled;
+              const disableActions = isUser || isDisabled;
+              return (
+                <tr key={item.id} className="border-t border-neutral-800/70">
+                  <Td>
+                    <div className="space-y-1">
+                      <div className="font-medium text-neutral-200">
+                        {item.name}
+                      </div>
+                      <div className="md:hidden">
+                        <span className="rounded-full bg-neutral-800/60 px-3 py-1 text-xs text-neutral-200">
+                          {item.category}
+                        </span>
+                      </div>
+                    </div>
+                  </Td>
+                  <Td className="hidden md:table-cell">
+                    <span className="rounded-full bg-neutral-800/60 px-3 py-1 text-xs text-neutral-200">
+                      {item.category}
+                    </span>
+                  </Td>
+                  <Td>{formatMoney(item.price)}</Td>
+                  <Td>{item.quantity}</Td>
+                  <Td className="hidden text-right text-neutral-200 md:table-cell">
+                    {formatMoney(value)}
+                  </Td>
+                  <Td>
+                    <div className="flex flex-nowrap items-center justify-center gap-4 whitespace-nowrap">
+                      <ActionIconButton
+                        label="Edit"
+                        disabled={disableActions}
+                        onClick={() => onEdit(item.id)}
+                      >
+                        <PencilIcon />
+                      </ActionIconButton>
+                      <ActionIconButton
+                        label={isDisabled ? "Enable" : "Disable"}
+                        disabled={isUser}
+                        onClick={() => onDisable(item.id)}
+                      >
+                        {isDisabled ? <EyeOffIcon /> : <EyeIcon />}
+                      </ActionIconButton>
+                      <ActionIconButton
+                        label="Delete"
+                        disabled={disableActions}
+                        onClick={() => onDelete(item.id)}
+                      >
+                        <TrashIcon />
+                      </ActionIconButton>
+                    </div>
+                  </Td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
 
 type ThProps = React.ThHTMLAttributes<HTMLTableCellElement>;
 function Th({ className = "", ...props }: ThProps) {
-  return <th className={`px-5 py-3 ${className}`} {...props} />;
+  return <th className={`px-3 py-3 sm:px-5 ${className}`} {...props} />;
 }
 
 type TdProps = React.TdHTMLAttributes<HTMLTableCellElement>;
 function Td({ className = "", ...props }: TdProps) {
   return (
-    <td className={`px-5 py-4 text-neutral-300 ${className}`} {...props} />
+    <td
+      className={`px-3 py-4 text-neutral-300 sm:px-5 ${className}`}
+      {...props}
+    />
   );
 }
 
